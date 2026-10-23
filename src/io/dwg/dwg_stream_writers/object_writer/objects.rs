@@ -2204,7 +2204,7 @@ impl<'a> DwgObjectWriter<'a> {
     fn write_image_definition(&mut self, def: &ImageDefinition) {
         // UNLISTED type — always use DXF class number (500+)
         let type_code = self.class_type_code("IMAGEDEF", common::OBJ_IMAGEDEF);
-        self.write_common_non_entity_data(type_code, def.handle, def.owner, &[], &None);
+        self.write_common_non_entity_data(type_code, def.handle, def.owner, &def.reactors, &None);
 
         self.writer.write_bit_long(def.class_version);
         self.writer.write_2raw_double(crate::types::Vector2::new(
