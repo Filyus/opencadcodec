@@ -1,5 +1,13 @@
 ## Changelog
 
+### Unreleased
+
+- **Classes of added entities** - Saving as DWG now declares the class of
+  every class-registered entity that the source file's class table lacks
+  (MULTILEADER, WIPEOUT, ACAD_TABLE, IMAGE, ARC_DIMENSION, ...), as it already
+  did for objects. Such an entity drawn into a file that never held one made
+  AutoCAD refuse to open the drawing.
+
 ### 0.6.6
 
 - **Optional DWG parallelism (issue #156)** - Adds a default-enabled `parallel`
