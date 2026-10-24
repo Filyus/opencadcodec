@@ -6112,6 +6112,12 @@ impl DwgDocumentBuilder {
                     obj.pixel_size = (data.pixel_size.x, data.pixel_size.y);
                     obj.resolution_unit =
                         crate::objects::ResolutionUnit::from_code(data.resolution_unit as i32);
+                    // The list lives on the object; drop the side-map copy so
+                    // the writer cannot bring back a list the caller emptied.
+                    obj.reactors = document
+                        .reactors_by_handle
+                        .remove(&Handle::from(handle))
+                        .unwrap_or_default();
                     document.objects.insert(
                         Handle::from(handle),
                         crate::objects::ObjectType::ImageDefinition(obj),
@@ -6145,7 +6151,9 @@ impl DwgDocumentBuilder {
                             crate::objects::ImageDefinitionReactor {
                                 handle: Handle::from(handle),
                                 owner: owner_handle,
-                                image_handle: Handle::NULL,
+                                // The image owns its reactor; DWG stores no
+                                // separate image link.
+                                image_handle: owner_handle,
                             },
                         ),
                     );
