@@ -224,8 +224,10 @@ impl ExtendedData {
     /// stays a unit vector), and a 1041 distance and 1042 scale factor its
     /// scale. Other values are left alone. Returns whether anything changed;
     /// the DWG writer then writes the edited records instead of the blobs
-    /// read from the file.
-    pub(crate) fn apply_transform(&mut self, transform: &Transform) -> bool {
+    /// read from the file. A caller that transforms an entity itself drops
+    /// the entity's verbatim `raw_record` when this returns true, as
+    /// `EntityType::translate` does.
+    pub fn apply_transform(&mut self, transform: &Transform) -> bool {
         let scale = transform.matrix.to_matrix3().determinant().abs().cbrt();
         let mut changed = false;
         for record in &mut self.records {
