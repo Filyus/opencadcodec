@@ -1471,6 +1471,10 @@ impl EntityType {
             EntityType::Extended(e) => e.apply_transform(transform),
             EntityType::Unknown(e) => transform_unknown(e, transform),
         }
+        // Unknown records have no geometry for their XDATA to follow.
+        if !matches!(self, EntityType::Unknown(_)) {
+            let _ = self.common_mut().extended_data.apply_transform(transform);
+        }
         // Applying a semantic transform invalidates verbatim DWG provenance;
         // unknown entities have no editable geometry and keep their payload.
         if transform_invalidates_raw_record(self) {

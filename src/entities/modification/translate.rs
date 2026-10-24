@@ -608,6 +608,18 @@ impl EntityType {
             EntityType::Extended(e) => e.translate(offset),
             EntityType::Unknown(e) => translate_unknown(e, offset),
         }
+        // XDATA positions follow the entity; records that stay put keep theirs.
+        // The verbatim record would write the old values back.
+        if !matches!(
+            self,
+            EntityType::SectionSymbol(_) | EntityType::ViewBorder(_) | EntityType::Unknown(_)
+        ) && self
+            .common_mut()
+            .extended_data
+            .apply_transform(&Transform::from_translation(offset))
+        {
+            self.common_mut().raw_record = None;
+        }
     }
 }
 
